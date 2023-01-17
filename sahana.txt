@@ -1,0 +1,116 @@
+defining the model with deeper and wider networks
+import tensorflow as tf
+from tensorflow import keras
+from sklearn.datasets import load_boston
+from sklearn.model_selection import train_test_split
+
+# Load the Boston Housing dataset
+boston_data = load_boston()
+X = boston_data.data
+y = boston_data.target
+
+# Split the data into train and test sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Define the model
+model = keras.Sequential()
+model.add(keras.layers.Dense(64, activation='relu', input_shape=(X_train.shape[1],)))
+model.add(keras.layers.Dense(64, activation='relu'))
+model.add(keras.layers.Dense(1))
+
+# Compile the model
+model.compile(optimizer='adam', loss='mean_squared_error', metrics=['mae'])
+
+# Train the model
+history = model.fit(X_train, y_train, epochs=100, batch_size=32, validation_data=(X_test, y_test))
+
+# Evaluate the model
+test_loss, test_mae = model.evaluate(X_test, y_test)
+print('Test MAE:', test_mae)
+
+# Define a deeper model
+model = keras.Sequential()
+model.add(keras.layers.Dense(64, activation='relu', input_shape=(X_train.shape[1],)))
+model.add(keras.layers.Dense(64, activation='relu'))
+model.add(keras.layers.Dense(64, activation='relu'))
+model.add(keras.layers.Dense(1))
+
+# Define a wider model
+model = keras.Sequential()
+model.add(keras.layers.Dense(128, activation='relu', input_shape=(X_train.shape[1],)))
+model.add(keras.layers.Dense(128, activation='relu'))
+model.add(keras.layers.Dense(1))
+
+plotting the training and validation accuracy and loss at each
+
+import matplotlib.pyplot as plt
+# Create a model
+model = keras.Sequential([
+keras.layers.Dense(64, activation='relu', input_shape=(X_train.shape[1],)),
+keras.layers.Dense(64, activation='relu'),
+keras.layers.Dense(1)
+])
+# Compile the model
+model.compile(optimizer='adam', loss='mse', metrics=['mae'])
+# Train the model
+history = model.fit(X_train, y_train, epochs=100, validation_split=0.2)
+# Plot the training and validation accuracy
+plt.plot(history.history['mae'])
+plt.plot(history.history['val_mae'])
+plt.title('Model accuracy')
+plt.ylabel('Accuracy')
+plt.xlabel('Epoch')
+plt.legend(['Train', 'Validation'], loc='upper left')
+plt.show()
+# Plot the training and validation loss
+plt.plot(history.history['loss'])
+plt.plot(history.history['val_loss'])
+plt.title('Model loss')
+plt.ylabel('Loss')
+plt.xlabel('Epoch')
+plt.legend(['Train', 'Validation'], loc='upper left')
+plt.show()
+
+finding mean squared error and mean absolute error from neural network
+from keras.datasets import boston_housing
+from keras.models import Sequential
+from keras.layers import Dense
+from keras.losses import mean_squared_error, mean_absolute_error
+
+
+# Loading the dataset
+(x_train, y_train), (x_test, y_test) = boston_housing.load_data()
+
+# Defining the neural network model
+model = Sequential()
+model.add(Dense(units=13, activation='relu', input_shape=(13,)))
+model.add(Dense(units=1))
+
+
+# Compilation
+model.compile(optimizer='adam', loss='mean_squared_error')
+
+
+# training
+model.fit(x_train, y_train, epochs=100, batch_size=32)
+
+
+# Evaluating
+test_loss = model.evaluate(x_test, y_test)
+
+
+# mean squared error
+mse = mean_squared_error(y_test, model.predict(x_test))
+
+
+# mean absolute error
+mae = mean_absolute_error(y_test, model.predict(x_test))
+
+
+# Printing the results
+print("Mean Squared Error:", mse)
+print("Mean Absolute Error:", mae)
+
+finding the predicted and real values
+predictions=model.predict(x_test)
+print("prediction:",predictions.flatten())
